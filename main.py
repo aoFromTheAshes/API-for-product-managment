@@ -1,7 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from .auth.base_config import fastapi_users, auth_backend
 from .auth.schemas import UserRead, UserCreate, UserUpdate  # Не забудьте імпортувати UserUpdate
-
+from .auth.models import User
+from .auth.base_config import current_user
 app = FastAPI()
 
 # Маршрути для автентифікації
@@ -31,3 +32,6 @@ app.include_router(
     tags=["users"]
 )
 
+@app.get("/authenticated-route")
+async def authenticated_route(user: User = Depends(current_user)):
+    return {"message": f"Hello {user.email}!"}

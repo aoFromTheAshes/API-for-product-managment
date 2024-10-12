@@ -10,7 +10,13 @@ import os
 
 load_dotenv()
 
-cookie_transport = CookieTransport(cookie_name="bonds", cookie_max_age=3600)
+cookie_transport = CookieTransport(
+    cookie_name="bonds",  # Назва кукі
+    cookie_max_age=3600,  # Час життя кукі в секундах (1 година)
+    cookie_path="/",      # Шлях дії кукі
+    cookie_secure=True,   # Встановіть True для використання лише через HTTPS
+    cookie_httponly=True, # HTTP only для захисту від XSS атак
+)
 
 SECRET = os.getenv('SECRET')
 

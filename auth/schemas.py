@@ -6,8 +6,8 @@ class UserRead(schemas.BaseUser[int]):
 
 
 class UserCreate(schemas.BaseUserCreate):
-    username: str
+    pass
 
 
 class UserUpdate(schemas.BaseUserUpdate):
-    username: str
+    pass
