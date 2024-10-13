@@ -6,6 +6,7 @@ from . import models, schemas
 # Отримати користувача за id
 async def get_product(db: AsyncSession, product_id: int):
     result = await db.execute(select(models.Product).filter(models.Product.id == product_id))
+    a = 'fafafafa'
     return result.scalar_one_or_none()
 
 
