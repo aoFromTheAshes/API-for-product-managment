@@ -7,7 +7,7 @@ from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 
 class Base(DeclarativeBase):
     pass
-
+jhh
 # Модель ролей
 class Role(Base):
     __tablename__ = "role"  # Ви назвали цю таблицю "role", а не "roles"
@@ -17,7 +17,7 @@ class Role(Base):
     permissions = Column(JSON)
 
 
-
+a = 1
 # Модель користувачів
 class User(SQLAlchemyBaseUserTable[int], Base):
     __tablename__ = "user"  # Рекомендується використовувати множину
