@@ -48,9 +48,9 @@ async def get_all_products(skip: int = 0, limit: int = 100, db: AsyncSession = D
     return products
 
     
-@app.get("/products/{id}/description", response_model=str)
-async def get_description_by_id(id: int, db: AsyncSession = Depends(get_async_session)):
-    description = await crud.get_product_description(db, id)
+@app.get("/products/{product_id}/description", response_model=str)
+async def get_description_by_id(product_id: int, db: AsyncSession = Depends(get_async_session)):
+    description = await crud.get_product_description(db, product_id)
     
     if description is None:
         raise HTTPException(status_code=404, detail="Product not found")
@@ -58,3 +58,6 @@ async def get_description_by_id(id: int, db: AsyncSession = Depends(get_async_se
     return description
     
     
+@app.post("/products/create", response_model=schemas.Product)
+async def add_new_product(product: schemas.ProductCreate, db: AsyncSession = Depends(get_async_session)):
+    return await crud.create_product(product=product, db=db)
