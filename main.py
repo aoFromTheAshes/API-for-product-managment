@@ -3,6 +3,12 @@ from .auth.base_config import fastapi_users, auth_backend
 from .auth.schemas import UserRead, UserCreate, UserUpdate  # Не забудьте імпортувати UserUpdate
 from .auth.models import User
 from .auth.base_config import current_user
+
+from sqlalchemy.ext.asyncio import AsyncSession
+from .database import get_async_session
+
+from . import crud, schemas, models
+
 app = FastAPI()
 
 # Маршрути для автентифікації
@@ -35,3 +41,14 @@ app.include_router(
 @app.get("/authenticated-route")
 async def authenticated_route(user: User = Depends(current_user)):
     return {"message": f"Hello {user.email}!"}
+
+@app.get("/products/", response_model=list[schemas.Product])
+async def get_all_products(skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_async_session)):
+    products = await crud.get_products(db, skip=skip, limit=limit)  
+    return products
+
+    
+    
+    
+    
+    

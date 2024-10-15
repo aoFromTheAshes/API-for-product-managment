@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Text, Float, ForeignKey, TIMESTA
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import DeclarativeBase
 
-from auth.models import Base
+from .auth.models import Base
 
 # Модель категорій
 class Category(Base):

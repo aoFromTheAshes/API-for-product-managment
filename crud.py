@@ -30,3 +30,6 @@ async def create_product(db: AsyncSession, product: schemas.Product):
     await db.refresh(db_item)
     return db_item
 
+
+async def get_product_info(db: AsyncSession, product: schemas.Product):
+    db_item = await db.execute(select(models.Product.description).filter())
