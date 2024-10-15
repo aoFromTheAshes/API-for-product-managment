@@ -6,7 +6,6 @@ from . import models, schemas
 # Отримати користувача за id
 async def get_product(db: AsyncSession, product_id: int):
     result = await db.execute(select(models.Product).filter(models.Product.id == product_id))
-    a = 'fafafafa'
     return result.scalar_one_or_none()
 
 
@@ -31,5 +30,7 @@ async def create_product(db: AsyncSession, product: schemas.Product):
     return db_item
 
 
-async def get_product_info(db: AsyncSession, product: schemas.Product):
-    db_item = await db.execute(select(models.Product.description).filter())
+async def get_product_description(db: AsyncSession, product_id: int):
+    result = await db.execute(select(models.Product.description).filter(models.Product.id == product_id))
+    product_description = result.scalars().first()
+    return product_description if product_description else None

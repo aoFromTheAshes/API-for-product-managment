@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from .auth.base_config import fastapi_users, auth_backend
 from .auth.schemas import UserRead, UserCreate, UserUpdate  # Не забудьте імпортувати UserUpdate
 from .auth.models import User
@@ -48,7 +48,13 @@ async def get_all_products(skip: int = 0, limit: int = 100, db: AsyncSession = D
     return products
 
     
+@app.get("/products/{id}/description", response_model=str)
+async def get_description_by_id(id: int, db: AsyncSession = Depends(get_async_session)):
+    description = await crud.get_product_description(db, id)
     
+    if description is None:
+        raise HTTPException(status_code=404, detail="Product not found")
     
+    return description
     
     
