@@ -68,6 +68,17 @@ async def change_products(product_id: int, product: schemas.ProductUpdate,db: As
     db_product = await crud.change_full_product(db, product_id, product=product)
     
     if db_product is None:
-        raise HTTPException(status_code=404, detail="Product is None")
+        raise HTTPException(status_code=404, detail="Product not found")
     
     return db_product
+
+
+@app.delete("/products/{product_id}/delete")
+async def delete_product(product_id: int,db: AsyncSession = Depends(get_async_session)):
+    product = await crud.get_product(db, product_id)
+    
+    if product is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    db.delete(product)
+    db.commit()
