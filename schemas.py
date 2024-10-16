@@ -15,6 +15,11 @@ class ProductCreate(BaseModel):
     category_id: int
     stock_quantity: Optional[int] = None
 
+class ProductUpdate(ProductBase):
+    description: str
+    stock_quantity: Optional[int] = None
+    
+
 class Product(ProductBase):
     id: int
     description: str

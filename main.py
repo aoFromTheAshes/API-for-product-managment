@@ -61,3 +61,13 @@ async def get_description_by_id(product_id: int, db: AsyncSession = Depends(get_
 @app.post("/products/create", response_model=schemas.Product)
 async def add_new_product(product: schemas.ProductCreate, db: AsyncSession = Depends(get_async_session)):
     return await crud.create_product(product=product, db=db)
+
+
+@app.put("/products/{product_id}/update", response_model=schemas.Product)
+async def change_products(product_id: int, product: schemas.ProductUpdate,db: AsyncSession = Depends(get_async_session)):
+    db_product = await crud.change_full_product(db, product_id, product=product)
+    
+    if db_product is None:
+        raise HTTPException(status_code=404, detail="Product is None")
+    
+    return db_product

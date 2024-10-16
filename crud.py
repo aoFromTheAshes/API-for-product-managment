@@ -34,3 +34,19 @@ async def get_product_description(db: AsyncSession, product_id: int):
     result = await db.execute(select(models.Product.description).filter(models.Product.id == product_id))
     product_description = result.scalars().first()
     return product_description if product_description else None
+
+
+async def change_full_product(db: AsyncSession, product_id: int, product: schemas.ProductUpdate):
+    result = await db.execute(select(models.Product).filter(models.Product.id == product_id))
+    result = result.scalars().first()
+    
+    result.name = product.name
+    result.description = product.description
+    result.price = product.price
+    result.category_id = product.category_id
+    result.stock_quantity = product.stock_quantity
+    
+    await db.commit()
+    await db.refresh(result)
+    
+    return result
