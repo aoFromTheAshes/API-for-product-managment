@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import FastAPI, Depends, HTTPException
 from .auth.base_config import fastapi_users, auth_backend
 from .auth.schemas import UserRead, UserCreate, UserUpdate  # Не забудьте імпортувати UserUpdate
@@ -6,6 +7,7 @@ from .auth.base_config import current_user
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from .database import get_async_session
+from sqlalchemy import select
 
 from . import crud, schemas, models
 
@@ -74,11 +76,47 @@ async def change_products(product_id: int, product: schemas.ProductUpdate,db: As
 
 
 @app.delete("/products/{product_id}/delete")
-async def delete_product(product_id: int,db: AsyncSession = Depends(get_async_session)):
+async def delete_product(product_id: int, db: AsyncSession = Depends(get_async_session)):
     product = await crud.get_product(db, product_id)
     
     if product is None:
         raise HTTPException(status_code=404, detail="Product not found")
     
-    db.delete(product)
-    db.commit()
+    await db.delete(product)
+    await db.commit() 
+
+    return {"detail": "Product deleted successfully"}
+
+
+@app.get("/products/search")
+async def search_products(
+    id: Optional[int] = None,
+    name: Optional[str] = None,
+    description: Optional[str] = None,
+    price: Optional[float] = None,
+    category_id: Optional[int] = None,
+    stock_quantity: Optional[int] = None,
+    db: AsyncSession = Depends(get_async_session)
+):
+    query = select(models.Product)
+
+    if id is not None:
+        query = query.filter(models.Product.id == id)
+    if name is not None:
+        query = query.filter(models.Product.name == name)
+    if description is not None:
+        query = query.filter(models.Product.description == description)
+    if price is not None:
+        query = query.filter(models.Product.price == price)
+    if category_id is not None:
+        query = query.filter(models.Product.category_id == category_id)
+    if stock_quantity is not None:
+        query = query.filter(models.Product.stock_quantity == stock_quantity)
+
+    result = await db.execute(query)
+    products = result.scalars().all()
+
+    if not products:
+        raise HTTPException(status_code=404, detail="No products found")
+
+    return products

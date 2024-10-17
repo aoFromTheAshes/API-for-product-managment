@@ -50,3 +50,7 @@ async def change_full_product(db: AsyncSession, product_id: int, product: schema
     await db.refresh(result)
     
     return result
+
+async def get_product_by_name(db: AsyncSession, name: str):
+    result = await db.execute(select(models.Product).filter(models.Product.name == name))
+    return result.scalar_one_or_none()
