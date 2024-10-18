@@ -39,3 +39,6 @@ class Category(BaseModel):
         
 class CategoryCreate(BaseModel):
     name: str
+    
+class CategoryUpdate(CategoryCreate):
+    pass

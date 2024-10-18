@@ -137,3 +137,20 @@ async def create_category(category: schemas.CategoryCreate, db: AsyncSession = D
     await db.commit()
     await db.refresh(db_item)
     return db_item
+
+
+@app.patch("/category/update/{category_id}", response_model=schemas.Category)
+async def get_updated(category_id: int, new_category: schemas.CategoryUpdate, db: AsyncSession = Depends(get_async_session)):
+    category = await db.execute(select(models.Category).filter(models.Category.id == category_id))
+    category = category.scalars().first()
+    
+    if category is None:
+        raise HTTPException(status_code=404, detail="Category not found")
+    
+    if new_category.name is not None:
+        category.name = new_category.name
+
+    await db.commit()
+    await db.refresh(category)
+    
+    return category
