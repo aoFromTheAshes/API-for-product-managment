@@ -28,4 +28,11 @@ class Product(ProductBase):
     updated_at: datetime = Field(..., description="Product update date")
     
     class Config:
-        from_attributes = True
+        orm_mode = True
+        
+class Category(BaseModel):
+    id: int
+    name: str
+    
+    class Config:
+        orm_mode = True

@@ -40,9 +40,11 @@ app.include_router(
     tags=["users"]
 )
 
+
 @app.get("/authenticated-route")
 async def authenticated_route(user: User = Depends(current_user)):
     return {"message": f"Hello {user.email}!"}
+
 
 @app.get("/products/", response_model=list[schemas.Product])
 async def get_all_products(skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_async_session)):
@@ -120,3 +122,9 @@ async def search_products(
         raise HTTPException(status_code=404, detail="No products found")
 
     return products
+
+
+@app.get("/category/", response_model=list[schemas.Category])
+async def categories(db: AsyncSession = Depends(get_async_session)):
+    category_list = await crud.get_categories(db=db)
+    return category_list
