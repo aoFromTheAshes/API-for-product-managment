@@ -128,3 +128,12 @@ async def search_products(
 async def categories(db: AsyncSession = Depends(get_async_session)):
     category_list = await crud.get_categories(db=db)
     return category_list
+
+
+@app.post("/category/create", response_model=schemas.Category)
+async def create_category(category: schemas.CategoryCreate, db: AsyncSession = Depends(get_async_session)):
+    db_item = models.Category(name=category.name)
+    db.add(db_item)
+    await db.commit()
+    await db.refresh(db_item)
+    return db_item
