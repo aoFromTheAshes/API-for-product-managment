@@ -17,7 +17,6 @@ class Role(Base):
     permissions = Column(JSON)
 
 
-a = 1
 # Модель користувачів
 class User(SQLAlchemyBaseUserTable[int], Base):
     __tablename__ = "user"  # Рекомендується використовувати множину
